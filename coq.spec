@@ -17,20 +17,20 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 Coq is a proof assistant which:
-  - allows to handle calculus assertions,
-  - check mechanically proofs of these assertions,
-  - helps to find formal proofs,
-  - extracts a certified program from the constructive proof of its
-    formal specification.
+ - allows to handle calculus assertions,
+ - check mechanically proofs of these assertions,
+ - helps to find formal proofs,
+ - extracts a certified program from the constructive proof of its
+   formal specification.
 
 %description -l pl
 Coq to narzêdzie pomagaj±ce w udowadnianiu, które:
- - pozwala uporaæ siê z twierdzeniami dotycz±cymi rachunku
-   ró¿niczkowego,
- - mechanicznie sprawdzaæ dowody tych twierdzeñ,
- - pomagaæ w znalezieniu formalnych dowodów,
- - wyci±gaæ program o dowiedzionej poprawno¶ci z konstruktywnego
-   dowodu jego formalnej specyfikacji.
+- pozwala uporaæ siê z twierdzeniami dotycz±cymi rachunku
+  ró¿niczkowego,
+- mechanicznie sprawdzaæ dowody tych twierdzeñ,
+- pomagaæ w znalezieniu formalnych dowodów,
+- wyci±gaæ program o dowiedzionej poprawno¶ci z konstruktywnego
+  dowodu jego formalnej specyfikacji.
 
 %prep
 %setup -q
@@ -44,9 +44,9 @@ Coq to narzêdzie pomagaj±ce w udowadnianiu, które:
 	-emacs emacs \
 	-emacslib %{_datadir}/emacs/site-lisp \
 	-opt \
-	-reals all # Need ocamlc.opt and ocamlopt.opt
+	-reals all	# Need ocamlc.opt and ocamlopt.opt
 
-%{__make} world check      # Use native coq to compile theories
+%{__make} world check	# Use native coq to compile theories
 
 %install
 rm -rf $RPM_BUILD_ROOT
