@@ -10,6 +10,7 @@ Vendor:		INRIA Rocquencourt
 URL:		http://coq.inria.fr
 Source0:	ftp://ftp.inria.fr/INRIA/coq/V7.4/%{name}-%{version}.tar.gz
 # Source0-md5:	13ac61f150823e54ad84a9096e2dd646
+Patch0:		coq-ocaml-3.07.patch
 Icon:		petit-coq.gif
 BuildRequires:	ocaml
 BuildRequires:	emacs
@@ -25,6 +26,7 @@ Coq is a proof assistant which:
 
 %prep
 %setup -q
+%patch0 -p0
 
 %build
 ./configure \
