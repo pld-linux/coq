@@ -1,17 +1,18 @@
 Summary:	The Coq Proof Assistant
+Summary(pl):	Coq - narzêdzie pomagaj±ce w udowadnianiu
 Name:		coq
 Version:	7.4
 Release:	1
 License:	GPL
 Group:		Applications/Math
 Vendor:		INRIA Rocquencourt
-URL:		http://coq.inria.fr
 Source0:	ftp://ftp.inria.fr/INRIA/coq/V7.4/%{name}-%{version}.tar.gz
 # Source0-md5:	13ac61f150823e54ad84a9096e2dd646
 Patch0:		coq-ocaml-3.07.patch
 Icon:		petit-coq.gif
-BuildRequires:	ocaml
+URL:		http://coq.inria.fr/
 BuildRequires:	emacs
+BuildRequires:	ocaml
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -20,7 +21,16 @@ Coq is a proof assistant which:
   - check mechanically proofs of these assertions,
   - helps to find formal proofs,
   - extracts a certified program from the constructive proof of its
-    formal specification,
+    formal specification.
+
+%description -l pl
+Coq to narzêdzie pomagaj±ce w udowadnianiu, które:
+ - pozwala uporaæ siê z twierdzeniami dotycz±cymi rachunku
+   ró¿niczkowego,
+ - mechanicznie sprawdzaæ dowody tych twierdzeñ,
+ - pomagaæ w znalezieniu formalnych dowodów,
+ - wyci±gaæ program o dowiedzionej poprawno¶ci z konstruktywnego
+   dowodu jego formalnej specyfikacji.
 
 %prep
 %setup -q
@@ -40,7 +50,9 @@ Coq is a proof assistant which:
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__make} -e COQINSTALLPREFIX=$RPM_BUILD_ROOT/ install
+
+%{__make} -e install \
+	COQINSTALLPREFIX=$RPM_BUILD_ROOT/
 # To install only locally the binaries compiled with absolute paths
 
 %clean
@@ -61,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/coq-interface.opt
 %attr(755,root,root) %{_bindir}/parser
 %attr(755,root,root) %{_bindir}/coq_vo2xml
+%dir %{_libdir}/coq
+%dir %{_libdir}/coq/theories
+%dir %{_libdir}/coq/theories/*
 %{_libdir}/coq/theories/Init/Datatypes.vo
 %{_libdir}/coq/theories/Init/DatatypesSyntax.vo
 %{_libdir}/coq/theories/Init/Peano.vo
@@ -249,6 +264,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/coq/theories/Sorting/Permutation.vo
 %{_libdir}/coq/theories/Sorting/Sorting.vo
 %{_libdir}/coq/contrib/omega/Omega.vo
+%dir %{_libdir}/coq/contrib
+%dir %{_libdir}/coq/contrib/*
 %{_libdir}/coq/contrib/romega/ReflOmegaCore.vo
 %{_libdir}/coq/contrib/romega/ROmega.vo
 %{_libdir}/coq/contrib/ring/ArithRing.vo
@@ -277,6 +294,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/coq/contrib/fourier/Fourier.vo
 %{_libdir}/coq/contrib/interface/Centaur.vo
 %{_libdir}/coq/contrib/cc/CC.vo
+%dir %{_libdir}/coq/states
 %{_libdir}/coq/states/barestate.coq
 %{_libdir}/coq/states/initial.coq
 %{_datadir}/emacs/site-lisp/coq.el
