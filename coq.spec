@@ -1,9 +1,7 @@
-# This file has been generated from RH/coq.spec.tpl
-# Do not edit
+Summary:	The Coq Proof Assistant
 Name:		coq
 Version:	7.4
 Release:	1
-Summary:	The Coq Proof Assistant
 License:	GPL
 Group:		Applications/Math
 Vendor:		INRIA Rocquencourt
