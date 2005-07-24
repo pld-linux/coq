@@ -1,18 +1,20 @@
 Summary:	The Coq Proof Assistant
 Summary(pl):	Coq - narzêdzie pomagaj±ce w udowadnianiu
 Name:		coq
-Version:	7.4
+Version:	8.0pl2
 Release:	1
 License:	GPL
 Group:		Applications/Math
 Vendor:		INRIA Rocquencourt
-Source0:	ftp://ftp.inria.fr/INRIA/coq/V7.4/%{name}-%{version}.tar.gz
-# Source0-md5:	13ac61f150823e54ad84a9096e2dd646
+Source0:	ftp://ftp.inria.fr/INRIA/coq/V%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	39ee0fed76e47a11de2f49e2c236ef79
 Patch0:		coq-ocaml-3.07.patch
 Icon:		petit-coq.gif
 URL:		http://coq.inria.fr/
 BuildRequires:	emacs
 BuildRequires:	ocaml
+BuildRequires:	ocaml-camlp4
+BuildRequires:	ocaml-lablgtk-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -34,7 +36,6 @@ Coq to narzêdzie pomagaj±ce w udowadnianiu, które:
 
 %prep
 %setup -q
-%patch0 -p0
 
 %build
 ./configure \
