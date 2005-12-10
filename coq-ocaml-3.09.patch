@@ -1,0 +1,27 @@
+*** Makefile	2005/02/01 15:38:09
+--- Makefile	2005/11/04 00:46:57
+***************
+*** 1453,1463 ****
+  
+  .ml4.cmx:
+  	$(SHOW)'OCAMLOPT4 $<'
+! 	$(HIDE)$(OCAMLOPT) $(OPTFLAGS) -pp "$(CAMLP4O) $(CAMLP4EXTENDFLAGS) `$(CAMLP4DEPS) $<` -impl" -c -impl $<
+  
+  .ml4.cmo:
+  	$(SHOW)'OCAMLC4   $<'
+! 	$(HIDE)$(OCAMLC) $(BYTEFLAGS) -pp "$(CAMLP4O) $(CAMLP4EXTENDFLAGS) `$(CAMLP4DEPS) $<` -impl" -c -impl $<
+  
+  #.v.vo:
+  #	$(BOOTCOQTOP) -compile $*
+--- 1453,1463 ----
+  
+  .ml4.cmx:
+  	$(SHOW)'OCAMLOPT4 $<'
+! 	$(HIDE)$(OCAMLOPT) $(OPTFLAGS) -pp "$(CAMLP4O) $(CAMLP4EXTENDFLAGS) `$(CAMLP4DEPS) $<` -loc loc -impl" -c -impl $<
+  
+  .ml4.cmo:
+  	$(SHOW)'OCAMLC4   $<'
+! 	$(HIDE)$(OCAMLC) $(BYTEFLAGS) -pp "$(CAMLP4O) $(CAMLP4EXTENDFLAGS) `$(CAMLP4DEPS) $<` -loc loc -impl" -c -impl $<
+  
+  #.v.vo:
+  #	$(BOOTCOQTOP) -compile $*
