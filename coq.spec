@@ -11,7 +11,6 @@ Source0:	ftp://ftp.inria.fr/INRIA/coq/V%{version}/%{name}-%{version}.tar.gz
 # ftp://ftp.inria.fr/INRIA/coq/V8.0pl2/patch-coq-8.0pl2-ocaml-3.09
 Patch0:		%{name}-ocaml-3.09.patch
 Patch1:		%{name}-lablgtk26.patch
-Icon:		petit-coq.gif
 URL:		http://coq.inria.fr/
 BuildRequires:	emacs
 BuildRequires:	ocaml >= 3.09.0
