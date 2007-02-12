@@ -1,5 +1,5 @@
 Summary:	The Coq Proof Assistant
-Summary(pl):	Coq - narzêdzie pomagaj±ce w udowadnianiu
+Summary(pl.UTF-8):   Coq - narzÄ™dzie pomagajÄ…ce w udowadnianiu
 Name:		coq
 Version:	8.0pl2
 Release:	2
@@ -26,13 +26,13 @@ Coq is a proof assistant which:
  - extracts a certified program from the constructive proof of its
    formal specification.
 
-%description -l pl
-Coq to narzêdzie pomagaj±ce w udowadnianiu, które:
-- pozwala uporaæ siê z twierdzeniami dotycz±cymi rachunku
-  ró¿niczkowego,
-- mechanicznie sprawdzaæ dowody tych twierdzeñ,
-- pomagaæ w znalezieniu formalnych dowodów,
-- wyci±gaæ program o dowiedzionej poprawno¶ci z konstruktywnego
+%description -l pl.UTF-8
+Coq to narzÄ™dzie pomagajÄ…ce w udowadnianiu, ktÃ³re:
+- pozwala uporaÄ‡ siÄ™ z twierdzeniami dotyczÄ…cymi rachunku
+  rÃ³Å¼niczkowego,
+- mechanicznie sprawdzaÄ‡ dowody tych twierdzeÅ„,
+- pomagaÄ‡ w znalezieniu formalnych dowodÃ³w,
+- wyciÄ…gaÄ‡ program o dowiedzionej poprawnoÅ›ci z konstruktywnego
   dowodu jego formalnej specyfikacji.
 
 %prep
