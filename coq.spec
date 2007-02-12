@@ -1,5 +1,5 @@
 Summary:	The Coq Proof Assistant
-Summary(pl.UTF-8):   Coq - narzędzie pomagające w udowadnianiu
+Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
 Name:		coq
 Version:	8.0pl2
 Release:	2
