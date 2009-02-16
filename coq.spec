@@ -1,3 +1,7 @@
+#
+# TODO:
+#	- desktop file for coqide
+#
 Summary:	The Coq Proof Assistant
 Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
 Name:		coq
