@@ -1,0 +1,41 @@
+--- coq-8.1pl4/configure~	2008-10-09 11:40:41.000000000 +0200
++++ coq-8.1pl4/configure	2009-02-16 14:03:00.496249846 +0100
+@@ -471,13 +471,13 @@
+ else
+     case $lablgtkdir_spec in
+ 	no) 
+-	    if [ -f "${CAMLLIB}/lablgtk2/glib.mli" ]; then
++	    if [ -f "${CAMLLIB}/lablgtk2/glib.cmi" ]; then
+ 		lablgtkdir=${CAMLLIB}/lablgtk2
+-	    elif [ -f "${CAMLLIB}/site-lib/lablgtk2/glib.mli" ]; then
++	    elif [ -f "${CAMLLIB}/site-lib/lablgtk2/glib.cmi" ]; then
+ 		lablgtkdir=${CAMLLIB}/site-lib/lablgtk2
+ 	    fi;;
+ 	yes)
+-	    if [ ! -f "$lablgtkdir/glib.mli" ]; then
++	    if [ ! -f "$lablgtkdir/glib.cmi" ]; then
+ 		echo "Incorrect LablGtk2 library (glib.mli not found)."
+ 		echo "Configuration script failed!"
+ 		exit 1
+@@ -486,9 +486,6 @@
+     if [ "$lablgtkdir" = "" ]; then
+ 	echo "LablGtk2 not found: CoqIde will not be available."
+ 	COQIDE=no
+-    elif [ -z "`grep -w convert_with_fallback "$lablgtkdir/glib.mli"`" ]; then
+-	echo "LablGtk2 found but too old: CoqIde will not be available."
+-	COQIDE=no;
+     elif [ "$coqide_spec" = "yes" -a "$COQIDE" = "byte" ]; then 
+ 	echo "LablGtk2 found, bytecode CoqIde will be used as requested."
+ 	COQIDE=byte
+@@ -855,11 +852,7 @@
+ ####################################################
+ 
+ if [ ! "$COQIDE" = "no" ]; then 
+-    if grep "class view " "$lablgtkdir/gText.mli" | grep -q "\[>" ; then
+ 	cp -f ide/undo_lablgtk_ge26.mli ide/undo.mli
+-    else
+-	cp -f ide/undo_lablgtk_lt26.mli ide/undo.mli
+-    fi
+ fi  
+ 
+ ##################################################
