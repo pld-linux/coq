@@ -5,20 +5,20 @@
 Summary:	The Coq Proof Assistant
 Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
 Name:		coq
-Version:	8.1pl4
+Version:	8.3pl1
 Release:	1
 License:	GPL
 Group:		Applications/Math
 Vendor:		INRIA Rocquencourt
 Source0:	http://coq.inria.fr/V%{version}/files/%{name}-%{version}.tar.gz
-# Source0-md5:	8fa623538d362d8f48d78e598c43215e
+# Source0-md5:	1869d22b337f5da59ba3bbe1433f9a3b
 Patch0:		%{name}-lablgtk2.patch
 URL:		http://coq.inria.fr/
 BuildRequires:	bash
 BuildRequires:	emacs
 BuildRequires:	ocaml >= 3.09.0
 BuildRequires:	camlp5 >= 5.01
-BuildRequires:	ocaml-lablgtk2-devel >= 2.6.0
+BuildRequires:	ocaml-lablgtk2-devel >= 2.12.0
 BuildRequires:	sed >= 4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
