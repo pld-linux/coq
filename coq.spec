@@ -1,25 +1,27 @@
-#
-# TODO:
-#	- desktop file for coqide
-#
 Summary:	The Coq Proof Assistant
 Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
 Name:		coq
 Version:	8.3pl1
-Release:	1
+Release:	0.1
 License:	GPL
 Group:		Applications/Math
 Vendor:		INRIA Rocquencourt
 Source0:	http://coq.inria.fr/V%{version}/files/%{name}-%{version}.tar.gz
 # Source0-md5:	1869d22b337f5da59ba3bbe1433f9a3b
+Source1:	coqide.desktop
+Source2:	coqide.xpm
 Patch0:		%{name}-lablgtk2.patch
 URL:		http://coq.inria.fr/
 BuildRequires:	bash
 BuildRequires:	emacs
+BuildRequires:	hevea
+BuildRequires:	netpbm-progs
 BuildRequires:	ocaml >= 3.09.0
 BuildRequires:	camlp5 >= 5.01
 BuildRequires:	ocaml-lablgtk2-devel >= 2.12.0
 BuildRequires:	sed >= 4.0
+BuildRequires:	texlive-latex-comment
+BuildRequires:	texlive-format-pdflatex
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -50,21 +52,26 @@ Coq to narzędzie pomagające w udowadnianiu, które:
 	-bindir %{_bindir} \
 	-libdir %{_libdir}/coq \
 	-mandir %{_mandir} \
+	-docdir %{_datadir}/coq/doc \
 	-emacs emacs \
+	-browser 'iceweasel -remote "OpenURL(%s,new-tab)" || iceweasel %s &' \
 	-emacslib %{_datadir}/emacs/site-lisp \
 	-opt \
 	--coqdocdir %{_datadir}/texmf/tex/latex/misc \
-	--coqide opt \
-	-reals all	# Need ocamlc.opt and ocamlopt.opt 
+	--coqide opt
 
 %{__make} -j1 world check	# Use native coq to compile theories
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 
 %{__make} -e install \
 	COQINSTALLPREFIX=$RPM_BUILD_ROOT/
 # To install only locally the binaries compiled with absolute paths
+
+install %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}
+install %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -105,3 +112,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/coqdoc.1*
 %{_mandir}/man1/coqwc.1*
 %{_datadir}/texmf/tex/latex/misc/coqdoc.sty
+%{_desktopdir}/coqide.desktop
+%{_pixmapsdir}/coqide.xpm
