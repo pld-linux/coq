@@ -22,6 +22,7 @@ BuildRequires:	ocaml-lablgtk2-devel >= 2.12.0
 BuildRequires:	sed >= 4.0
 BuildRequires:	texlive-latex-ams
 BuildRequires:	texlive-latex-comment
+BuildRequires:	texlive-latex-moreverb
 BuildRequires:	texlive-format-pdflatex
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
