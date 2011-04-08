@@ -109,11 +109,15 @@ install -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}
 install %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
 
+# pdf is enough
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/ps
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
+%doc %{_docdir}/%{name}-%{version}
 %attr(755,root,root) %{_bindir}/coq_makefile
 %attr(755,root,root) %{_bindir}/coq-tex
 %attr(755,root,root) %{_bindir}/coqc
