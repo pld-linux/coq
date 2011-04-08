@@ -44,6 +44,30 @@ Coq to narzędzie pomagające w udowadnianiu, które:
 - wyciągać program o dowiedzionej poprawności z konstruktywnego
   dowodu jego formalnej specyfikacji.
 
+%package emacs
+Summary:	Emacs mode and syntax for Coq
+Summary(pl.UTF-8):	Tryb i składnia Coq dla Emacsa
+Group:		Development/Tools
+Requires:	%{name} = %{version}-%{release}
+
+%description emacs
+Emacs mode and suyntax files for Coq.
+
+%description emacs -l pl.UTF-8
+Pliki trybu i składni Coq dla Emacsa.
+
+%package latex
+Summary:	Coq documentation style for latex
+Summary(pl.UTF-8):	Styl dokumentacji Coq dla latexa
+Group:		Development/Tools
+Requires:	%{name} = %{version}-%{release}
+
+%description latex
+Coq documentation style for latex.
+
+%description latex -l pl.UTF-8
+Styl dokumentacji Coq dla latexa.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -63,7 +87,8 @@ Coq to narzędzie pomagające w udowadnianiu, które:
 	--coqdocdir %{_datadir}/texmf/tex/latex/misc \
 	--coqide opt
 
-%{__make} -j1 world check	# Use native coq to compile theories
+%{__make} -j1 world
+%{__make} -j1 check	# Use native coq to compile theories
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -81,8 +106,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/coq-tex
 %attr(755,root,root) %{_bindir}/coq_makefile
+%attr(755,root,root) %{_bindir}/coq-tex
 %attr(755,root,root) %{_bindir}/coqc
 %attr(755,root,root) %{_bindir}/coqchk
 %attr(755,root,root) %{_bindir}/coqchk.opt
@@ -97,24 +122,30 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gallina
 %dir %{_libdir}/coq
 %{_libdir}/coq/*
-%{_datadir}/emacs/site-lisp/coq.el
-%{_datadir}/emacs/site-lisp/coq-db.el
-%{_datadir}/emacs/site-lisp/coq-font-lock.el
-%{_datadir}/emacs/site-lisp/coq-inferior.el
-%{_datadir}/emacs/site-lisp/coq-syntax.el
+%{_mandir}/man1/coq_makefile.1*
+%{_mandir}/man1/coq-tex.1*
 %{_mandir}/man1/coqc.1*
 %{_mandir}/man1/coqchk.1*
 %{_mandir}/man1/coqdep.1*
 %{_mandir}/man1/coqdoc.1*
-%{_mandir}/man1/coq_makefile.1*
-%{_mandir}/man1/coqmktop.1*
-%{_mandir}/man1/coq-tex.1*
 %{_mandir}/man1/coqide.1*
+%{_mandir}/man1/coqmktop.1*
 %{_mandir}/man1/coqtop.1*
 %{_mandir}/man1/coqtop.byte.1*
 %{_mandir}/man1/coqtop.opt.1*
 %{_mandir}/man1/coqwc.1*
 %{_mandir}/man1/gallina.1*
-%{_datadir}/texmf/tex/latex/misc/coqdoc.sty
 %{_desktopdir}/coqide.desktop
 %{_pixmapsdir}/coqide.xpm
+
+%files emacs
+%defattr(644,root,root,755)
+%{_datadir}/emacs/site-lisp/coq.el
+%{_datadir}/emacs/site-lisp/coq-db.el
+%{_datadir}/emacs/site-lisp/coq-font-lock.el
+%{_datadir}/emacs/site-lisp/coq-inferior.el
+%{_datadir}/emacs/site-lisp/coq-syntax.el
+
+%files latex
+%defattr(644,root,root,755)
+%{_datadir}/texmf/tex/latex/misc/coqdoc.sty
