@@ -55,7 +55,7 @@ Coq to narzędzie pomagające w udowadnianiu, które:
 	-bindir %{_bindir} \
 	-libdir %{_libdir}/coq \
 	-mandir %{_mandir} \
-	-docdir %{_datadir}/coq/doc \
+	-docdir %{_docdir}/%{name}-%{version} \
 	-emacs emacs \
 	-browser 'iceweasel -remote "OpenURL(%s,new-tab)" || iceweasel %s &' \
 	-emacslib %{_datadir}/emacs/site-lisp \
@@ -81,11 +81,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/coq-interface
-%attr(755,root,root) %{_bindir}/coq-interface.opt
 %attr(755,root,root) %{_bindir}/coq-tex
 %attr(755,root,root) %{_bindir}/coq_makefile
 %attr(755,root,root) %{_bindir}/coqc
+%attr(755,root,root) %{_bindir}/coqchk
+%attr(755,root,root) %{_bindir}/coqchk.opt
 %attr(755,root,root) %{_bindir}/coqdep
 %attr(755,root,root) %{_bindir}/coqdoc
 %attr(755,root,root) %{_bindir}/coqide*
@@ -95,25 +95,26 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/coqtop.opt
 %attr(755,root,root) %{_bindir}/coqwc
 %attr(755,root,root) %{_bindir}/gallina
-%attr(755,root,root) %{_bindir}/parser
-%attr(755,root,root) %{_bindir}/parser.opt
 %dir %{_libdir}/coq
 %{_libdir}/coq/*
 %{_datadir}/emacs/site-lisp/coq.el
+%{_datadir}/emacs/site-lisp/coq-db.el
+%{_datadir}/emacs/site-lisp/coq-font-lock.el
 %{_datadir}/emacs/site-lisp/coq-inferior.el
-%{_mandir}/man1/coq-tex.1*
-%{_mandir}/man1/coqdep.1*
-%{_mandir}/man1/gallina.1*
+%{_datadir}/emacs/site-lisp/coq-syntax.el
 %{_mandir}/man1/coqc.1*
+%{_mandir}/man1/coqchk.1*
+%{_mandir}/man1/coqdep.1*
+%{_mandir}/man1/coqdoc.1*
+%{_mandir}/man1/coq_makefile.1*
+%{_mandir}/man1/coqmktop.1*
+%{_mandir}/man1/coq-tex.1*
+%{_mandir}/man1/coqide.1*
 %{_mandir}/man1/coqtop.1*
 %{_mandir}/man1/coqtop.byte.1*
 %{_mandir}/man1/coqtop.opt.1*
-%{_mandir}/man1/coq_makefile.1*
-%{_mandir}/man1/coqmktop.1*
-%{_mandir}/man1/coq-interface.1*
-%{_mandir}/man1/parser.1*
-%{_mandir}/man1/coqdoc.1*
 %{_mandir}/man1/coqwc.1*
+%{_mandir}/man1/gallina.1*
 %{_datadir}/texmf/tex/latex/misc/coqdoc.sty
 %{_desktopdir}/coqide.desktop
 %{_pixmapsdir}/coqide.xpm
