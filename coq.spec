@@ -1,3 +1,7 @@
+#
+# Conditional build:
+%bcond_with	tests	# run testsuite (non-deterministic fail in micromega tests on 64bit arch)
+#
 Summary:	The Coq Proof Assistant
 Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
 Name:		coq
@@ -81,14 +85,14 @@ Styl dokumentacji Coq dla latexa.
 	-mandir %{_mandir} \
 	-docdir %{_docdir}/%{name}-%{version} \
 	-emacs emacs \
-	-browser 'iceweasel -remote "OpenURL(%s,new-tab)" || iceweasel %s &' \
+	-browser "xdg-open %s" \
 	-emacslib %{_datadir}/emacs/site-lisp \
 	-opt \
 	--coqdocdir %{_datadir}/texmf/tex/latex/misc \
 	--coqide opt
 
 %{__make} -j1 world
-%{__make} -j1 check	# Use native coq to compile theories
+%{?with_tests:%{__make} -j1 check}	# Use native coq to compile theories
 
 %install
 rm -rf $RPM_BUILD_ROOT
