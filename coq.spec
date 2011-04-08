@@ -1,6 +1,9 @@
 #
+# TODO:
+#	- package and R: Csdp (https://projects.coin-or.org/Csdp)
+#
 # Conditional build:
-%bcond_with	tests	# run testsuite (non-deterministic fail in micromega tests on 64bit arch)
+%bcond_with	tests	# run testsuite (csdp dependant micromega tests fail badly on x86_64)
 #
 Summary:	The Coq Proof Assistant
 Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
@@ -77,6 +80,7 @@ Styl dokumentacji Coq dla latexa.
 %patch0 -p1
 
 %{__sed} -i -e 's|#!/bin/sh|#!/bin/bash|' test-suite/check
+%{__sed} -i -e 's|\(MAKE_TSOPTS=.*\) -s \(.*\)|\1 \2|' Makefile.build
 
 %build
 ./configure \
@@ -91,8 +95,8 @@ Styl dokumentacji Coq dla latexa.
 	--coqdocdir %{_datadir}/texmf/tex/latex/misc \
 	--coqide opt
 
-%{__make} -j1 world
-%{?with_tests:%{__make} -j1 check}	# Use native coq to compile theories
+%{__make} -j1 world VERBOSE=1
+%{?with_tests:%{__make} -j1 check VERBOSE=1}	# Use native coq to compile theories
 
 %install
 rm -rf $RPM_BUILD_ROOT
