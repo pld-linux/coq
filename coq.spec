@@ -9,7 +9,7 @@ Summary:	The Coq Proof Assistant
 Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
 Name:		coq
 Version:	8.3pl1
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/Math
 Vendor:		INRIA Rocquencourt
@@ -32,6 +32,7 @@ BuildRequires:	texlive-latex-comment
 BuildRequires:	texlive-latex-moreverb
 BuildRequires:	texlive-psutils
 BuildRequires:	texlive-format-pdflatex
+%requires_eq	ocaml-runtime
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
