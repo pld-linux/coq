@@ -8,13 +8,13 @@
 Summary:	The Coq Proof Assistant
 Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
 Name:		coq
-Version:	8.3pl1
-Release:	2
+Version:	8.4pl3
+Release:	1
 License:	GPL
 Group:		Applications/Math
 Vendor:		INRIA Rocquencourt
 Source0:	http://coq.inria.fr/V%{version}/files/%{name}-%{version}.tar.gz
-# Source0-md5:	1869d22b337f5da59ba3bbe1433f9a3b
+# Source0-md5:	40a3057ae296bbb228e1e6537f44ccb1
 Source1:	coqide.desktop
 Source2:	coqide.xpm
 Patch0:		%{name}-lablgtk2.patch
@@ -89,6 +89,8 @@ Styl dokumentacji Coq dla latexa.
 	-libdir %{_libdir}/coq \
 	-mandir %{_mandir} \
 	-docdir %{_docdir}/%{name}-%{version} \
+	-configdir %{_sysconfdir}/%{name} \
+	-datadir %{_datadir}/%{name} \
 	-emacs emacs \
 	-browser "xdg-open %s" \
 	-emacslib %{_datadir}/emacs/site-lisp \
@@ -119,6 +121,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc %{_docdir}/%{name}-%{version}
+%dir %{_sysconfdir}/%{name}
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/coqide-gtk2rc
 %attr(755,root,root) %{_bindir}/coq_makefile
 %attr(755,root,root) %{_bindir}/coq-tex
 %attr(755,root,root) %{_bindir}/coqc
@@ -150,6 +154,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gallina.1*
 %{_desktopdir}/coqide.desktop
 %{_pixmapsdir}/coqide.xpm
+%{_datadir}/%{name}
 
 %files emacs
 %defattr(644,root,root,755)

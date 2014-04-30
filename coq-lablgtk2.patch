@@ -1,31 +1,32 @@
 --- coq-8.1pl4/configure~	2008-10-09 11:40:41.000000000 +0200
 +++ coq-8.1pl4/configure	2009-02-16 14:03:00.496249846 +0100
-@@ -471,13 +471,13 @@
- else
-     case $lablgtkdir_spec in
- 	no) 
--	    if [ -f "${CAMLLIB}/lablgtk2/glib.mli" ]; then
-+	    if [ -f "${CAMLLIB}/lablgtk2/glib.cmi" ]; then
- 		lablgtkdir=${CAMLLIB}/lablgtk2
--	    elif [ -f "${CAMLLIB}/site-lib/lablgtk2/glib.mli" ]; then
-+	    elif [ -f "${CAMLLIB}/site-lib/lablgtk2/glib.cmi" ]; then
- 		lablgtkdir=${CAMLLIB}/site-lib/lablgtk2
- 	    fi;;
- 	yes)
--	    if [ ! -f "$lablgtkdir/glib.mli" ]; then
-+	    if [ ! -f "$lablgtkdir/glib.cmi" ]; then
- 		echo "Incorrect LablGtk2 library (glib.mli not found)."
+@@ -634,7 +634,7 @@
+             # Beware of the final \r in Win32
+             lablgtkdirtmp="$(ocamlfind query lablgtk2 2> /dev/null | tr -d '\r')"
+             if [ "$lablgtkdirtmp" != "" ]; then
+-                if [ -f "$lablgtkdirtmp/glib.cmi" -a -f "$lablgtkdirtmp/glib.mli" ]; then
++                if [ -f "$lablgtkdirtmp/glib.cmi" -o -f "$lablgtkdirtmp/glib.mli" ]; then
+                     lablgtkdirfoundmsg="LabelGtk2 found by ocamlfind"
+                     lablgtkdir=$lablgtkdirtmp
+                     LABLGTKLIB=$lablgtkdir # Pour le message utilisateur
+@@ -652,7 +652,7 @@
+                 echo "$lablgtkdir is not a valid directory."
  		echo "Configuration script failed!"
  		exit 1
-@@ -486,9 +486,6 @@
+-	    elif [ -f "$lablgtkdir/glib.cmi" -a -f "$lablgtkdir/glib.mli" ]; then
++	    elif [ -f "$lablgtkdir/glib.cmi" -o -f "$lablgtkdir/glib.mli" ]; then
+                 lablgtkdirfoundmsg="LablGtk2 directory found"
+                 LABLGTKLIB=$lablgtkdir # Pour le message utilisateur
+             else
+@@ -664,9 +664,6 @@
      if [ "$lablgtkdir" = "" ]; then
  	echo "LablGtk2 not found: CoqIde will not be available."
  	COQIDE=no
 -    elif [ -z "`grep -w convert_with_fallback "$lablgtkdir/glib.mli"`" ]; then
--	echo "LablGtk2 found but too old: CoqIde will not be available."
+-	echo "$lablgtkdirfoundmsg but too old: CoqIde will not be available."
 -	COQIDE=no;
      elif [ "$coqide_spec" = "yes" -a "$COQIDE" = "byte" ]; then 
- 	echo "LablGtk2 found, bytecode CoqIde will be used as requested."
+ 	echo "$lablgtkdirfoundmsg, bytecode CoqIde will be used as requested."
  	COQIDE=byte
 @@ -855,15 +852,7 @@
  ####################################################
