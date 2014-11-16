@@ -9,7 +9,7 @@ Summary:	The Coq Proof Assistant
 Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
 Name:		coq
 Version:	8.4pl3
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/Math
 Vendor:		INRIA Rocquencourt
