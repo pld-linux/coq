@@ -8,13 +8,13 @@
 Summary:	The Coq Proof Assistant
 Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
 Name:		coq
-Version:	8.4pl3
-Release:	2
+Version:	8.4pl5
+Release:	1
 License:	GPL
 Group:		Applications/Math
 Vendor:		INRIA Rocquencourt
-Source0:	http://coq.inria.fr/V%{version}/files/%{name}-%{version}.tar.gz
-# Source0-md5:	40a3057ae296bbb228e1e6537f44ccb1
+Source0:	http://coq.inria.fr/distrib/V%{version}/files/%{name}-%{version}.tar.gz
+# Source0-md5:	7839005b48527a85149da950bd2ac006
 Source1:	coqide.desktop
 Source2:	coqide.xpm
 Patch0:		%{name}-lablgtk2.patch
