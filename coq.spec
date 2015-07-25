@@ -3,8 +3,13 @@
 #	- package and R: Csdp (https://projects.coin-or.org/Csdp)
 #
 # Conditional build:
-%bcond_with	tests	# run testsuite (csdp dependant micromega tests fail badly on x86_64)
+%bcond_without	ocaml_opt	# skip building native optimized binaries (bytecode is always built)
+%bcond_with	tests		# run testsuite (csdp dependant micromega tests fail badly on x86_64)
 #
+%ifnarch %{ix86} %{x8664} arm aarch64 ppc sparc sparcv9
+%undefine	with_ocaml_opt
+%endif
+
 Summary:	The Coq Proof Assistant
 Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
 Name:		coq
@@ -94,12 +99,12 @@ Styl dokumentacji Coq dla latexa.
 	-emacs emacs \
 	-browser "xdg-open %s" \
 	-emacslib %{_datadir}/emacs/site-lisp \
-	-opt \
+	%{?with_ocaml_opt:-opt} \
 	--coqdocdir %{_datadir}/texmf/tex/latex/misc \
-	--coqide opt
+	--coqide %{?with_ocaml_opt:opt}%{!?with_ocaml_opt:byte}
 
-%{__make} -j1 world VERBOSE=1
-%{?with_tests:%{__make} -j1 check VERBOSE=1}	# Use native coq to compile theories
+%{__make} -j1 world VERBOSE=1 CAML_LD_LIBRARY_PATH=kernel/byterun
+%{?with_tests:%{__make} -j1 check VERBOSE=1 CAML_LD_LIBRARY_PATH=kernel/byterun} # Use native coq to compile theories
 
 %install
 rm -rf $RPM_BUILD_ROOT
