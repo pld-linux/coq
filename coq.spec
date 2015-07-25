@@ -32,6 +32,8 @@ BuildRequires:	ocaml >= 3.09.0
 BuildRequires:	camlp5 >= 5.01
 BuildRequires:	ocaml-lablgtk2-devel >= 2.12.0
 BuildRequires:	sed >= 4.0
+BuildRequires:	texlive-fonts-cmextra
+BuildRequires:	texlive-fonts-other
 BuildRequires:	texlive-latex-ams
 BuildRequires:	texlive-latex-comment
 BuildRequires:	texlive-latex-moreverb
@@ -132,14 +134,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/coq-tex
 %attr(755,root,root) %{_bindir}/coqc
 %attr(755,root,root) %{_bindir}/coqchk
-%attr(755,root,root) %{_bindir}/coqchk.opt
+%{?with_ocaml_opt:%attr(755,root,root) %{_bindir}/coqchk.opt}
 %attr(755,root,root) %{_bindir}/coqdep
 %attr(755,root,root) %{_bindir}/coqdoc
 %attr(755,root,root) %{_bindir}/coqide*
 %attr(755,root,root) %{_bindir}/coqmktop
 %attr(755,root,root) %{_bindir}/coqtop
 %attr(755,root,root) %{_bindir}/coqtop.byte
-%attr(755,root,root) %{_bindir}/coqtop.opt
+%{?with_ocaml_opt:%attr(755,root,root) %{_bindir}/coqtop.opt}
 %attr(755,root,root) %{_bindir}/coqwc
 %attr(755,root,root) %{_bindir}/gallina
 %dir %{_libdir}/coq
@@ -154,7 +156,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/coqmktop.1*
 %{_mandir}/man1/coqtop.1*
 %{_mandir}/man1/coqtop.byte.1*
-%{_mandir}/man1/coqtop.opt.1*
+%{?with_ocaml_opt:%{_mandir}/man1/coqtop.opt.1*}
 %{_mandir}/man1/coqwc.1*
 %{_mandir}/man1/gallina.1*
 %{_desktopdir}/coqide.desktop
