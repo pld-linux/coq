@@ -13,13 +13,12 @@
 Summary:	The Coq Proof Assistant
 Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
 Name:		coq
-Version:	8.4pl5
-Release:	2
-License:	GPL
+Version:	8.4pl6
+Release:	1
+License:	LGPL v2.1
 Group:		Applications/Math
-Vendor:		INRIA Rocquencourt
 Source0:	http://coq.inria.fr/distrib/V%{version}/files/%{name}-%{version}.tar.gz
-# Source0-md5:	7839005b48527a85149da950bd2ac006
+# Source0-md5:	2334a98b64578cb81d2b4127e327b368
 Source1:	coqide.desktop
 Source2:	coqide.xpm
 Patch0:		%{name}-lablgtk2.patch
@@ -33,12 +32,17 @@ BuildRequires:	camlp5 >= 5.01
 BuildRequires:	ocaml-lablgtk2-devel >= 2.12.0
 BuildRequires:	sed >= 4.0
 BuildRequires:	texlive-fonts-cmextra
+BuildRequires:	texlive-fonts-cmsuper
 BuildRequires:	texlive-fonts-other
+BuildRequires:	texlive-format-pdflatex
 BuildRequires:	texlive-latex-ams
 BuildRequires:	texlive-latex-comment
 BuildRequires:	texlive-latex-moreverb
+BuildRequires:	texlive-latex-ucs
+BuildRequires:	texlive-makeindex
 BuildRequires:	texlive-psutils
-BuildRequires:	texlive-format-pdflatex
+# hyperref.sty (from latex) requires ifxexex.sty (from xetex)
+BuildRequires:	texlive-xetex
 %requires_eq	ocaml-runtime
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -121,6 +125,7 @@ install %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
 
 # pdf is enough
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/ps
+cp -p CHANGES COMPATIBILITY COPYRIGHT CREDITS README $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
