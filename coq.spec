@@ -13,12 +13,12 @@
 Summary:	The Coq Proof Assistant
 Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
 Name:		coq
-Version:	8.4pl6
-Release:	3
+Version:	8.6
+Release:	1
 License:	LGPL v2.1
 Group:		Applications/Math
 Source0:	http://coq.inria.fr/distrib/V%{version}/files/%{name}-%{version}.tar.gz
-# Source0-md5:	2334a98b64578cb81d2b4127e327b368
+# Source0-md5:	e7f1704b85d648468160abe03338f1bd
 Source1:	coqide.desktop
 Source2:	coqide.xpm
 Patch0:		%{name}-lablgtk2.patch
@@ -30,6 +30,7 @@ BuildRequires:	netpbm-progs
 BuildRequires:	ocaml >= 3.09.0
 BuildRequires:	camlp5 >= 5.01
 BuildRequires:	ocaml-lablgtk2-devel >= 2.12.0
+BuildRequires:	ocaml-lablgtk2-gtksourceview2-devel
 BuildRequires:	sed >= 4.0
 BuildRequires:	texlive-fonts-cmextra
 BuildRequires:	texlive-fonts-cmsuper
@@ -106,8 +107,8 @@ Styl dokumentacji Coq dla latexa.
 	-browser "xdg-open %s" \
 	-emacslib %{_datadir}/emacs/site-lisp \
 	%{?with_ocaml_opt:-opt} \
-	--coqdocdir %{_datadir}/texmf/tex/latex/misc \
-	--coqide %{?with_ocaml_opt:opt}%{!?with_ocaml_opt:byte}
+	-coqdocdir %{_datadir}/texmf/tex/latex/misc \
+	-coqide %{?with_ocaml_opt:opt}%{!?with_ocaml_opt:byte}
 
 %{__make} -j1 world VERBOSE=1 CAML_LD_LIBRARY_PATH=kernel/byterun
 %{?with_tests:%{__make} -j1 check VERBOSE=1 CAML_LD_LIBRARY_PATH=kernel/byterun} # Use native coq to compile theories
@@ -123,9 +124,7 @@ install -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}
 install %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
 
-# pdf is enough
-%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/ps
-cp -p CHANGES COMPATIBILITY COPYRIGHT CREDITS README $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+cp -p CHANGES COMPATIBILITY COPYRIGHT CREDITS README.md $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -134,20 +133,18 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc %{_docdir}/%{name}-%{version}
 %dir %{_sysconfdir}/%{name}
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/coqide-gtk2rc
 %attr(755,root,root) %{_bindir}/coq_makefile
 %attr(755,root,root) %{_bindir}/coq-tex
 %attr(755,root,root) %{_bindir}/coqc
 %attr(755,root,root) %{_bindir}/coqchk
-%{?with_ocaml_opt:%attr(755,root,root) %{_bindir}/coqchk.opt}
 %attr(755,root,root) %{_bindir}/coqdep
 %attr(755,root,root) %{_bindir}/coqdoc
 %attr(755,root,root) %{_bindir}/coqide*
 %attr(755,root,root) %{_bindir}/coqmktop
 %attr(755,root,root) %{_bindir}/coqtop
 %attr(755,root,root) %{_bindir}/coqtop.byte
-%{?with_ocaml_opt:%attr(755,root,root) %{_bindir}/coqtop.opt}
 %attr(755,root,root) %{_bindir}/coqwc
+%attr(755,root,root) %{_bindir}/coqworkmgr
 %attr(755,root,root) %{_bindir}/gallina
 %dir %{_libdir}/coq
 %{_libdir}/coq/*
@@ -170,11 +167,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files emacs
 %defattr(644,root,root,755)
-%{_datadir}/emacs/site-lisp/coq.el
-%{_datadir}/emacs/site-lisp/coq-db.el
 %{_datadir}/emacs/site-lisp/coq-font-lock.el
 %{_datadir}/emacs/site-lisp/coq-inferior.el
-%{_datadir}/emacs/site-lisp/coq-syntax.el
+%{_datadir}/emacs/site-lisp/gallina-db.el
+%{_datadir}/emacs/site-lisp/gallina-syntax.el
+%{_datadir}/emacs/site-lisp/gallina.el
 
 %files latex
 %defattr(644,root,root,755)

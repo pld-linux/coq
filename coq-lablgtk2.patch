@@ -1,46 +1,22 @@
---- coq-8.1pl4/configure~	2008-10-09 11:40:41.000000000 +0200
-+++ coq-8.1pl4/configure	2009-02-16 14:03:00.496249846 +0100
-@@ -634,7 +634,7 @@
-             # Beware of the final \r in Win32
-             lablgtkdirtmp="$(ocamlfind query lablgtk2 2> /dev/null | tr -d '\r')"
-             if [ "$lablgtkdirtmp" != "" ]; then
--                if [ -f "$lablgtkdirtmp/glib.cmi" -a -f "$lablgtkdirtmp/glib.mli" ]; then
-+                if [ -f "$lablgtkdirtmp/glib.cmi" -o -f "$lablgtkdirtmp/glib.mli" ]; then
-                     lablgtkdirfoundmsg="LabelGtk2 found by ocamlfind"
-                     lablgtkdir=$lablgtkdirtmp
-                     LABLGTKLIB=$lablgtkdir # Pour le message utilisateur
-@@ -652,7 +652,7 @@
-                 echo "$lablgtkdir is not a valid directory."
- 		echo "Configuration script failed!"
- 		exit 1
--	    elif [ -f "$lablgtkdir/glib.cmi" -a -f "$lablgtkdir/glib.mli" ]; then
-+	    elif [ -f "$lablgtkdir/glib.cmi" -o -f "$lablgtkdir/glib.mli" ]; then
-                 lablgtkdirfoundmsg="LablGtk2 directory found"
-                 LABLGTKLIB=$lablgtkdir # Pour le message utilisateur
-             else
-@@ -664,9 +664,6 @@
-     if [ "$lablgtkdir" = "" ]; then
- 	echo "LablGtk2 not found: CoqIde will not be available."
- 	COQIDE=no
--    elif [ -z "`grep -w convert_with_fallback "$lablgtkdir/glib.mli"`" ]; then
--	echo "$lablgtkdirfoundmsg but too old: CoqIde will not be available."
--	COQIDE=no;
-     elif [ "$coqide_spec" = "yes" -a "$COQIDE" = "byte" ]; then 
- 	echo "$lablgtkdirfoundmsg, bytecode CoqIde will be used as requested."
- 	COQIDE=byte
-@@ -855,15 +852,7 @@
- ####################################################
+--- coq-8.6/configure.ml~	2016-12-08 15:13:52.000000000 +0000
++++ coq-8.6/configure.ml	2017-06-05 23:04:32.311195087 +0000
+@@ -669,8 +669,8 @@
+     yell (sprintf "No such directory '%s' (%s)." dir msg)
+   else if not (Sys.file_exists (dir/"gSourceView2.cmi")) then
+     yell (sprintf "Incomplete LablGtk2 (%s): no %s/gSourceView2.cmi." msg dir)
+-  else if not (Sys.file_exists (dir/"glib.mli")) then
+-    yell (sprintf "Incomplete LablGtk2 (%s): no %s/glib.mli." msg dir)
++  else if not (Sys.file_exists (dir/"glib.cmi")) then
++    yell (sprintf "Incomplete LablGtk2 (%s): no %s/glib.cmi." msg dir)
+   else true
  
- if [ ! "$COQIDE" = "no" ]; then 
--    if grep "class view " "$lablgtkdir/gText.mli" | grep -q "\[>" ; then
--       if grep -q "?accepts_tab:bool" "$lablgtkdir/gText.mli" ; then
-         cp -f ide/undo_lablgtk_ge212.mli ide/undo.mli
--       else
--	cp -f ide/undo_lablgtk_ge26.mli ide/undo.mli
--       fi
--    else
--	cp -f ide/undo_lablgtk_lt26.mli ide/undo.mli
--    fi
- fi  
- 
- ##################################################
+ (** Detect and/or verify the Lablgtk2 location *)
+@@ -701,7 +701,7 @@
+ | Manual | Stdlib ->
+   let test accu f =
+     if accu then
+-      let test = sprintf "grep -q -w %s %S/glib.mli" f dir in
++      let test = sprintf "grep -q -w %s %S/glib.cmi" f dir in
+       Sys.command test = 0
+     else false
+   in
