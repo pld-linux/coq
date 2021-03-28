@@ -3,7 +3,7 @@
 %bcond_without	ocaml_opt	# skip building native optimized binaries (bytecode is always built)
 %bcond_with	tests		# run testsuite (csdp dependant micromega tests fail badly on x86_64)
 #
-%ifnarch %{ix86} %{x8664} arm aarch64 ppc sparc sparcv9
+%ifnarch %{ix86} %{x8664} %{arm} aarch64 ppc sparc sparcv9
 %undefine	with_ocaml_opt
 %endif
 
@@ -45,7 +45,7 @@ BuildRequires:	texlive-xetex
 %requires_eq	ocaml-runtime
 Obsoletes:	coq-emacs < 8.13.1
 # same as ocaml-zarith
-ExclusiveArch:	%{ix86} %{x8664} arm aarch64 ppc sparc sparcv9
+ExclusiveArch:	%{ix86} %{x8664} %{arm} aarch64 ppc sparc sparcv9
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
