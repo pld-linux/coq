@@ -13,24 +13,25 @@
 Summary:	The Coq Proof Assistant
 Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
 Name:		coq
-Version:	8.6
+Version:	8.13.1
 Release:	1
 License:	LGPL v2.1
 Group:		Applications/Math
-Source0:	http://coq.inria.fr/distrib/V%{version}/files/%{name}-%{version}.tar.gz
-# Source0-md5:	e7f1704b85d648468160abe03338f1bd
+Source0:	https://github.com/coq/coq/archive/V%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	03ebbf1034c224a0a3327db2d5688c29
 Source1:	coqide.desktop
 Source2:	coqide.xpm
-Patch0:		%{name}-lablgtk2.patch
 URL:		http://coq.inria.fr/
 BuildRequires:	bash
-BuildRequires:	emacs
 BuildRequires:	hevea
 BuildRequires:	netpbm-progs
-BuildRequires:	ocaml >= 3.09.0
+BuildRequires:	ocaml >= 1:4.05
 BuildRequires:	camlp5 >= 5.01
-BuildRequires:	ocaml-lablgtk2-devel >= 2.12.0
-BuildRequires:	ocaml-lablgtk2-gtksourceview2-devel
+BuildRequires:	ocaml-dune > 2.5.0
+BuildRequires:	ocaml-findlib >= 1.8.1
+BuildRequires:	ocaml-zarith-devel >= 1.10
+BuildRequires:	ocaml-lablgtk3-devel
+BuildRequires:	ocaml-lablgtk3-gtksourceview-devel
 BuildRequires:	sed >= 4.0
 BuildRequires:	texlive-fonts-cmextra
 BuildRequires:	texlive-fonts-cmsuper
@@ -45,6 +46,7 @@ BuildRequires:	texlive-psutils
 # hyperref.sty (from latex) requires ifxexex.sty (from xetex)
 BuildRequires:	texlive-xetex
 %requires_eq	ocaml-runtime
+Obsoletes:	coq-emacs < 8.13.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -61,20 +63,8 @@ Coq to narzędzie pomagające w udowadnianiu, które:
   różniczkowego,
 - mechanicznie sprawdzać dowody tych twierdzeń,
 - pomagać w znalezieniu formalnych dowodów,
-- wyciągać program o dowiedzionej poprawności z konstruktywnego
-  dowodu jego formalnej specyfikacji.
-
-%package emacs
-Summary:	Emacs mode and syntax for Coq
-Summary(pl.UTF-8):	Tryb i składnia Coq dla Emacsa
-Group:		Development/Tools
-Requires:	%{name} = %{version}-%{release}
-
-%description emacs
-Emacs mode and suyntax files for Coq.
-
-%description emacs -l pl.UTF-8
-Pliki trybu i składni Coq dla Emacsa.
+- wyciągać program o dowiedzionej poprawności z konstruktywnego dowodu
+  jego formalnej specyfikacji.
 
 %package latex
 Summary:	Coq documentation style for latex
@@ -90,10 +80,19 @@ Styl dokumentacji Coq dla latexa.
 
 %prep
 %setup -q
-%patch0 -p1
 
-%{__sed} -i -e 's|#!/bin/sh|#!/bin/bash|' test-suite/check
-%{__sed} -i -e 's|\(MAKE_TSOPTS=.*\) -s \(.*\)|\1 \2|' Makefile.build
+%{__sed} -ri '/FULLCONFIGDIR/s/OLDROOT|COQINSTALLPREFIX/&2/g' Makefile.install
+%{__sed} -i 's|-Wall.*-O2|%{rpmcflags} -Wno-unused|' configure.ml
+%{__sed} -i "s|-oc|-ccopt '%{rpmldflags}' -g &|" Makefile.build
+%{__sed} -i 's,-shared,& -g,g' tools/CoqMakefile.in Makefile.build
+
+%{__sed} -E -i -e '1s,#!\s*/usr/bin/env\s+python3(\s|$),#!%{__python3}\1,' \
+      tools/make-both-single-timing-files.py \
+      tools/make-both-time-files.py \
+      tools/make-one-time-file.py
+
+%{__sed} -E -i -e '1s,#!\s*/usr/bin/env\s+python2(\s|$),#!%{__python3}\1,' \
+      doc/tools/coqrst/notations/fontsupport.py
 
 %build
 ./configure \
@@ -103,28 +102,36 @@ Styl dokumentacji Coq dla latexa.
 	-docdir %{_docdir}/%{name}-%{version} \
 	-configdir %{_sysconfdir}/%{name} \
 	-datadir %{_datadir}/%{name} \
-	-emacs emacs \
-	-browser "xdg-open %s" \
-	-emacslib %{_datadir}/emacs/site-lisp \
-	%{?with_ocaml_opt:-opt} \
 	-coqdocdir %{_datadir}/texmf/tex/latex/misc \
-	-coqide %{?with_ocaml_opt:opt}%{!?with_ocaml_opt:byte}
+%if %{with ocaml_opt}
+	-native-compiler yes \
+	-coqide opt \
+%else
+	-byte-only \
+	-native-compiler no \
+	-coqide byte \
+%endif
+	-browser "xdg-open %s"
 
-%{__make} -j1 world VERBOSE=1 CAML_LD_LIBRARY_PATH=kernel/byterun
-%{?with_tests:%{__make} -j1 check VERBOSE=1 CAML_LD_LIBRARY_PATH=kernel/byterun} # Use native coq to compile theories
+%{__make} world VERBOSE=1 CAML_LD_LIBRARY_PATH=kernel/byterun
+%{?with_tests:%{__make} check VERBOSE=1 CAML_LD_LIBRARY_PATH=kernel/byterun} # Use native coq to compile theories
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 
-%{__make} -e install \
-	COQINSTALLPREFIX=$RPM_BUILD_ROOT/
+%{__make} install \
+	COQINSTALLPREFIX=$RPM_BUILD_ROOT%{_prefix} \
+	COQINSTALLPREFIX2=$RPM_BUILD_ROOT%{_sysconfdir} \
+	OLDROOT=%{_prefix} \
+	OLDROOT2=%{_sysconfdir}
+
 # To install only locally the binaries compiled with absolute paths
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}
-install %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
+cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}
+cp -p %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
 
-cp -p CHANGES COMPATIBILITY COPYRIGHT CREDITS README.md $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+cp -p CONTRIBUTING.md README.md $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -133,19 +140,23 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc %{_docdir}/%{name}-%{version}
 %dir %{_sysconfdir}/%{name}
-%attr(755,root,root) %{_bindir}/coq_makefile
-%attr(755,root,root) %{_bindir}/coq-tex
 %attr(755,root,root) %{_bindir}/coqc
 %attr(755,root,root) %{_bindir}/coqchk
 %attr(755,root,root) %{_bindir}/coqdep
 %attr(755,root,root) %{_bindir}/coqdoc
 %attr(755,root,root) %{_bindir}/coqide*
-%attr(755,root,root) %{_bindir}/coqmktop
+%attr(755,root,root) %{_bindir}/coq_makefile
+%attr(755,root,root) %{_bindir}/coqpp
+%attr(755,root,root) %{_bindir}/coqproofworker.opt
+%attr(755,root,root) %{_bindir}/coqqueryworker.opt
+%attr(755,root,root) %{_bindir}/coqtacticworker.opt
+%attr(755,root,root) %{_bindir}/coq-tex
 %attr(755,root,root) %{_bindir}/coqtop
-%attr(755,root,root) %{_bindir}/coqtop.byte
+%attr(755,root,root) %{_bindir}/coqtop.opt
 %attr(755,root,root) %{_bindir}/coqwc
 %attr(755,root,root) %{_bindir}/coqworkmgr
-%attr(755,root,root) %{_bindir}/gallina
+%attr(755,root,root) %{_bindir}/ocamllibdep
+%attr(755,root,root) %{_bindir}/votour
 %dir %{_libdir}/coq
 %{_libdir}/coq/*
 %{_mandir}/man1/coq_makefile.1*
@@ -155,23 +166,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/coqdep.1*
 %{_mandir}/man1/coqdoc.1*
 %{_mandir}/man1/coqide.1*
-%{_mandir}/man1/coqmktop.1*
 %{_mandir}/man1/coqtop.1*
 %{_mandir}/man1/coqtop.byte.1*
 %{?with_ocaml_opt:%{_mandir}/man1/coqtop.opt.1*}
 %{_mandir}/man1/coqwc.1*
-%{_mandir}/man1/gallina.1*
 %{_desktopdir}/coqide.desktop
 %{_pixmapsdir}/coqide.xpm
 %{_datadir}/%{name}
-
-%files emacs
-%defattr(644,root,root,755)
-%{_datadir}/emacs/site-lisp/coq-font-lock.el
-%{_datadir}/emacs/site-lisp/coq-inferior.el
-%{_datadir}/emacs/site-lisp/gallina-db.el
-%{_datadir}/emacs/site-lisp/gallina-syntax.el
-%{_datadir}/emacs/site-lisp/gallina.el
 
 %files latex
 %defattr(644,root,root,755)
