@@ -11,7 +11,7 @@ Summary:	The Coq Proof Assistant
 Summary(pl.UTF-8):	Coq - narzędzie pomagające w udowadnianiu
 Name:		coq
 Version:	8.13.1
-Release:	1
+Release:	2
 License:	LGPL v2.1
 Group:		Applications/Math
 Source0:	https://github.com/coq/coq/archive/V%{version}/%{name}-%{version}.tar.gz
@@ -47,6 +47,9 @@ Obsoletes:	coq-emacs < 8.13.1
 # same as ocaml-zarith
 ExclusiveArch:	%{ix86} %{x8664} %{arm} aarch64 ppc sparc sparcv9
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+# Exclude private ocaml interfaces
+%define		_noautoreq	ocamlx?\\\((Configwin_types|Interface|Richpp|Serialize|Xml_p(arser|rinter)|Xmlprotocol)\\\)
 
 %description
 Coq is a proof assistant which:
