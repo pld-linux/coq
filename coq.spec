@@ -1,8 +1,14 @@
 #
 # Conditional build:
-%bcond_without	ocaml_opt	# skip building native optimized binaries (bytecode is always built)
+%bcond_without	ocaml_opt	# native optimized binaries (bytecode is always built)
+%bcond_with	sse2		# SSE2 instructions
+%bcond_with	doc		# documentation
 %bcond_with	tests		# run testsuite (csdp dependant micromega tests fail badly on x86_64)
 #
+%ifarch pentium4 %{x8664} x32
+%define		with_sse2	1
+%endif
+
 %ifnarch %{ix86} %{x8664} %{arm} aarch64 ppc sparc sparcv9
 %undefine	with_ocaml_opt
 %endif
@@ -18,18 +24,27 @@ Source0:	https://github.com/coq/coq/archive/V%{version}/%{name}-%{version}.tar.g
 # Source0-md5:	03ebbf1034c224a0a3327db2d5688c29
 Source1:	coqide.desktop
 Source2:	coqide.xpm
-URL:		http://coq.inria.fr/
+URL:		https://coq.inria.fr/
 BuildRequires:	bash
-BuildRequires:	hevea
-BuildRequires:	netpbm-progs
 BuildRequires:	ocaml >= 1:4.05
 BuildRequires:	camlp5 >= 5.01
 BuildRequires:	ocaml-dune > 2.5.0
 BuildRequires:	ocaml-findlib >= 1.8.1
 BuildRequires:	ocaml-zarith-devel >= 1.10
-BuildRequires:	ocaml-lablgtk3-devel
-BuildRequires:	ocaml-lablgtk3-gtksourceview-devel
+BuildRequires:	ocaml-lablgtk3-devel >= 3.1.0
+BuildRequires:	ocaml-lablgtk3-gtksourceview-devel >= 3.1.0
 BuildRequires:	sed >= 4.0
+%if %{with doc}
+BuildRequires:	python3 >= 1:3
+# TODO (and adjust package name)
+BuildRequires:	python3-antlr4-python3-runtime >= 4.7.1
+BuildRequires:	python3-bs4 >= 4.0.6
+BuildRequires:	python3-pexpect >= 4.2.1
+BuildRequires:	python3-sphinx_rtd_theme >= 0.4.3
+# TODO (and adjust package name)
+BuildRequires:	python3-sphinxcontrib-bibtex >= 0.4.2
+BuildRequires:	sphinx-pdg >= 2.3.1
+# TODO: update texlive packages list (or drop pdf building leaving only html)
 BuildRequires:	texlive-fonts-cmextra
 BuildRequires:	texlive-fonts-cmsuper
 BuildRequires:	texlive-fonts-other
@@ -42,6 +57,10 @@ BuildRequires:	texlive-makeindex
 BuildRequires:	texlive-psutils
 # hyperref.sty (from latex) requires ifxexex.sty (from xetex)
 BuildRequires:	texlive-xetex
+%endif
+%if %{with sse2}
+Requires:	cpuinfo(sse2)
+%endif
 %requires_eq	ocaml-runtime
 Obsoletes:	coq-emacs < 8.13.1
 # same as ocaml-zarith
@@ -69,22 +88,25 @@ Coq to narzędzie pomagające w udowadnianiu, które:
   jego formalnej specyfikacji.
 
 %package latex
-Summary:	Coq documentation style for latex
-Summary(pl.UTF-8):	Styl dokumentacji Coq dla latexa
+Summary:	Coq documentation style for LaTeX
+Summary(pl.UTF-8):	Styl dokumentacji Coq dla LaTeXa
 Group:		Development/Tools
 Requires:	%{name} = %{version}-%{release}
 
 %description latex
-Coq documentation style for latex.
+Coq documentation style for LaTeX.
 
 %description latex -l pl.UTF-8
-Styl dokumentacji Coq dla latexa.
+Styl dokumentacji Coq dla LaTeXa.
 
 %prep
 %setup -q
 
 %{__sed} -ri '/FULLCONFIGDIR/s/OLDROOT|COQINSTALLPREFIX/&2/g' Makefile.install
 %{__sed} -i 's|-Wall.*-O2|%{rpmcflags} -Wno-unused|' configure.ml
+%if %{with sse2}
+%{__sed} -i -e '/cflags_sse2/ s/-msse2 -mfpmath=sse//' configure.ml
+%endif
 %{__sed} -i "s|-oc|-ccopt '%{rpmldflags}' -g &|" Makefile.build
 %{__sed} -i 's,-shared,& -g,g' tools/CoqMakefile.in Makefile.build
 
@@ -99,21 +121,22 @@ Styl dokumentacji Coq dla latexa.
 %build
 ./configure \
 	-bindir %{_bindir} \
+	-configdir %{_sysconfdir}/%{name} \
+	-coqdocdir %{_datadir}/texmf/tex/latex/misc \
+	-datadir %{_datadir}/%{name} \
+	-docdir %{_docdir}/%{name}-%{version} \
 	-libdir %{_libdir}/coq \
 	-mandir %{_mandir} \
-	-docdir %{_docdir}/%{name}-%{version} \
-	-configdir %{_sysconfdir}/%{name} \
-	-datadir %{_datadir}/%{name} \
-	-coqdocdir %{_datadir}/texmf/tex/latex/misc \
 %if %{with ocaml_opt}
-	-native-compiler yes \
 	-coqide opt \
+	-native-compiler yes \
 %else
 	-byte-only \
-	-native-compiler no \
 	-coqide byte \
+	-native-compiler no \
 %endif
-	-browser "xdg-open %s"
+	-browser "xdg-open %s" \
+	%{?with_doc:-with-doc yes}
 
 %{__make} world VERBOSE=1 CAML_LD_LIBRARY_PATH=kernel/byterun
 %{?with_tests:%{__make} check VERBOSE=1 CAML_LD_LIBRARY_PATH=kernel/byterun} # Use native coq to compile theories
@@ -133,7 +156,7 @@ install -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_desktopdir}
 cp -p %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}
 
-cp -p CONTRIBUTING.md README.md $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+cp -p CONTRIBUTING.md CREDITS README.md $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
