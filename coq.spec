@@ -131,8 +131,8 @@ Styl dokumentacji Coq dla LaTeXa.
 %patch0 -p1
 
 %{__sed} -i 's|-Wall.*-O2|%{rpmcflags} -Wno-unused|' tools/configure/configure.ml
-%if %{with sse2}
-%{__sed} -i -e '/cflags_sse2/ s/-msse2 -mfpmath=sse//' configure.ml
+%if %{without sse2}
+%{__sed} -i -e '/cflags_sse2/ s/-msse2 -mfpmath=sse//' tools/configure/configure.ml
 %endif
 %{__sed} -i 's,-shared,& -g,g' tools/CoqMakefile.in
 
