@@ -1,0 +1,42 @@
+--- coq-8.15.0/Makefile.install.orig	2022-01-13 12:55:53.000000000 +0100
++++ coq-8.15.0/Makefile.install	2022-01-28 18:43:46.051635360 +0100
+@@ -55,12 +55,12 @@ endif
+ # For now, we respect the values given at configure's time.
+ ifdef DUNE_29_PLUS
+ install-dune: $(BCONTEXT)/coq-core.install $(BCONTEXT)/coqide-server.install
+-	dune install $(_DOPT) $(DESTDIRARG) --mandir="$(MANDIR)" --prefix="$(COQPREFIX)" --etcdir="$(CONFIGDIR)" --docdir="$(DOCDIR)" coq-core
+-	dune install $(_DOPT) $(DESTDIRARG) --mandir="$(MANDIR)" --prefix="$(COQPREFIX)" --etcdir="$(CONFIGDIR)" --docdir="$(DOCDIR)" coqide-server
++	dune install $(_DOPT) $(DESTDIRARG) --mandir="$(MANDIR)" --etcdir="$(CONFIGDIR)" --docdir="$(DOCDIR)" coq-core
++	dune install $(_DOPT) $(DESTDIRARG) --mandir="$(MANDIR)" --etcdir="$(CONFIGDIR)" --docdir="$(DOCDIR)" coqide-server
+ else
+ install-dune: $(BCONTEXT)/coq-core.install $(BCONTEXT)/coqide-server.install
+-	dune install $(_DOPT) $(DESTDIRARG) --mandir="$(MANDIR)" --prefix="$(COQPREFIX)" coq-core
+-	dune install $(_DOPT) $(DESTDIRARG) --mandir="$(MANDIR)" --prefix="$(COQPREFIX)" coqide-server
++	dune install $(_DOPT) $(DESTDIRARG) --mandir="$(MANDIR)" coq-core
++	dune install $(_DOPT) $(DESTDIRARG) --mandir="$(MANDIR)" coqide-server
+ endif
+ 
+ # IMPORTANT NOTE: before Dune 2.9, the --docdir and --etcdir options
+@@ -103,9 +103,9 @@ install-coqide:
+ else
+ ifdef DUNE_29_PLUS
+ install-coqide: $(BCONTEXT)/coqide.install
+-	dune install $(_DOPT) $(DESTDIRARG) --mandir="$(MANDIR)" --prefix="$(COQPREFIX)" --etcdir="$(CONFIGDIR)" --docdir="$(DOCDIR)" coqide
++	dune install $(_DOPT) $(DESTDIRARG) --mandir="$(MANDIR)" --etcdir="$(CONFIGDIR)" --docdir="$(DOCDIR)" coqide
+ else
+-	dune install $(_DOPT) $(DESTDIRARG) --mandir="$(MANDIR)" --prefix="$(COQPREFIX)" coqide
++	dune install $(_DOPT) $(DESTDIRARG) --mandir="$(MANDIR)" coqide
+ endif
+ endif
+ 
+--- coq-8.15.0/boot/env.ml.orig	2022-01-13 12:55:53.000000000 +0100
++++ coq-8.15.0/boot/env.ml	2022-01-29 08:35:32.771267459 +0100
+@@ -48,7 +48,7 @@ let guess_coqlib () =
+ let guess_coqcorelib lib =
+   if Sys.file_exists (Path.relative lib "plugins")
+   then lib
+-  else Path.relative lib "../coq-core"
++  else Path.relative lib "../ocaml/coq-core"
+ 
+ (* Should we fail on double initialization? That seems a way to avoid
+    mis-use for example when we pass command line arguments *)
