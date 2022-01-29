@@ -1,7 +1,7 @@
 #
 # Conditional build:
 %bcond_without	ocaml_opt	# native optimized binaries (bytecode is always built)
-%bcond_with	sse2		# SSE2 instructions
+%bcond_without	sse2		# SSE2 instructions (i387 maths not supported as of 8.15)
 %bcond_with	doc		# documentation
 %bcond_with	tests		# run testsuite (csdp dependant micromega tests fail badly on x86_64)
 #
