@@ -128,7 +128,7 @@ Styl dokumentacji Coq dla LaTeXa.
 
 %prep
 %setup -q
-%patch0 -p1
+%patch -P0 -p1
 
 %{__sed} -i 's|-Wall.*-O2|%{rpmcflags} -Wno-unused|' tools/configure/configure.ml
 %if %{without sse2}
